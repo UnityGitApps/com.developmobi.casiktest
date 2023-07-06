@@ -61,7 +61,7 @@ public class Manager : MonoBehaviour
         View.ReferenceRectTransform.anchorMin = anchorMin;
         View.ReferenceRectTransform.anchorMax = anchorMax;
 
-        View.SetShowSpinnerWhileLoading(true);
+        View.SetShowSpinnerWhileLoading(false);
         View.BackgroundColor = Color.black;
 
         View.OnOrientationChanged += (v, o) =>
@@ -90,12 +90,6 @@ public class Manager : MonoBehaviour
 
         View.OnPageStarted += (browser, url) =>
         {
-            Screen.fullScreen = false;
-            foreach (Transform t in View.ReferenceRectTransform)
-            {
-                Destroy(t.gameObject);
-            }
-
             var safeArea = Screen.safeArea;
             var anchorMin = safeArea.position;
             var anchorMax = anchorMin + safeArea.size;
@@ -108,8 +102,18 @@ public class Manager : MonoBehaviour
             View.ReferenceRectTransform.anchorMin = anchorMin;
             View.ReferenceRectTransform.anchorMax = anchorMax;
 
-            View.Show();
             View.UpdateFrame();
+        };
+
+        View.OnPageFinished += (v, url, code) =>
+        {
+            Screen.fullScreen = false;
+            foreach (Transform t in View.ReferenceRectTransform)
+            {
+                Destroy(t.gameObject);
+            }
+
+            View.Show();
         };
     }
 }
